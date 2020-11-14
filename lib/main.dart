@@ -56,7 +56,7 @@ class HomePage extends StatelessWidget {
           appBarTheme: AppBarTheme(
             brightness: Brightness.light,
             textTheme: ThemeData.dark().textTheme.copyWith(
-                    title: TextStyle(
+                    headline6: TextStyle(
                   fontFamily: 'OpenSans',
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
