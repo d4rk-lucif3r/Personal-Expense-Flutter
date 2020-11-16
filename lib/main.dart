@@ -27,11 +27,35 @@ class HomePage extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Personal Expense',
       theme: ThemeData(
+          buttonTheme: ButtonThemeData(
+            buttonColor: Colors.amber,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            highlightColor: Colors.amberAccent,
+            disabledColor: Colors.amber[100]
+          ),
+          textSelectionTheme: TextSelectionThemeData(
+              cursorColor: Colors.black,
+              selectionColor: Colors.black,
+              selectionHandleColor: Colors.black),
+          //dialogBackgroundColor: Colors.black,
+          dialogTheme: DialogTheme(
+              //backgroundColor: Colors.black,
+              contentTextStyle: TextStyle(
+                backgroundColor: Colors.white,
+                color: Colors.amber,
+                decorationColor: Colors.red,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              )),
           primarySwatch: Colors.red,
           accentColor: Colors.orange,
           cardTheme: CardTheme(
               elevation: 10,
-              shadowColor: Colors.white,
+              color: Colors.red,
+              shadowColor: Colors.deepOrange,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               )),
@@ -41,7 +65,7 @@ class HomePage extends StatelessWidget {
                     fontFamily: 'OpenSans',
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black),
+                    color: Colors.white),
                 button: TextStyle(
                   color: Colors.white,
                 ),
@@ -52,7 +76,7 @@ class HomePage extends StatelessWidget {
                     color: Colors.white),
               ),
           errorColor: Colors.red,
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.black,
           appBarTheme: AppBarTheme(
             brightness: Brightness.light,
             textTheme: ThemeData.dark().textTheme.copyWith(
@@ -124,18 +148,17 @@ class _MyHomePageState extends State<MyHomePage> {
   void _startAddNewTransaction(BuildContext ctx) {
     showCupertinoModalPopup(
         context: ctx,
+        barrierDismissible: true,
         // isScrollControlled: true,
         // shape: RoundedRectangleBorder(
         //     borderRadius: BorderRadius.vertical(
         //   top: Radius.circular(20),
         // )),
-        
-        
+
         builder: (_) {
           return NewTransactions(_addNewTransaction);
         });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -170,7 +193,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 GestureDetector(
                   child: Icon(CupertinoIcons.add),
                   onTap: () => _startAddNewTransaction(context),
-
                 ),
               ],
             ),
@@ -203,7 +225,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 mediaQuery.padding.top) *
             .7,
         child: TransactionList(_userTransactions, _deleteTransaction));
-    final pageBody = SafeArea(child: SingleChildScrollView(
+    final pageBody = SafeArea(
+        child: SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,

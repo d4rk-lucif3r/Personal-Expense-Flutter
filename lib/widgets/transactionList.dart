@@ -21,6 +21,7 @@ class TransactionList extends StatelessWidget {
                 height: 15,
               ),
               Container(
+                  alignment: Alignment.topCenter,
                   height: constraints.maxHeight * .6,
                   child: Image.asset(
                     'assets/images/waiting.png',
@@ -40,12 +41,16 @@ class TransactionList extends StatelessWidget {
                   //   _deleteTx(_userTransactions[index].id);
                   // },
                   leading: CircleAvatar(
+                    backgroundColor: Colors.amber,
                     radius: 30,
                     child: Padding(
                       padding: const EdgeInsets.all(6),
                       child: FittedBox(
                         child: Text(
-                            '\$${_userTransactions[index].amount.toStringAsFixed(2)}'),
+                            '\₹${_userTransactions[index].amount.toStringAsFixed(2)}',
+                            style: TextStyle(
+                              color: Colors.black,
+                            )),
                       ),
                     ),
                   ),
@@ -57,7 +62,7 @@ class TransactionList extends StatelessWidget {
                       .format(_userTransactions[index].date)),
                   trailing: MediaQuery.of(context).size.width > 450
                       ? FlatButton.icon(
-                          textColor: theme.errorColor,
+                          textColor: Colors.amber,
                           icon: Icon(Icons.delete),
                           label: Text('Delete'),
                           onPressed: () {
@@ -72,7 +77,7 @@ class TransactionList extends StatelessWidget {
                         )
                       : IconButton(
                           icon: Icon(Icons.delete),
-                          color: theme.errorColor,
+                          color: Colors.amber,
                           onPressed: () {
                             _deleteTx(_userTransactions[index].id);
                             Scaffold.of(context).showSnackBar(SnackBar(

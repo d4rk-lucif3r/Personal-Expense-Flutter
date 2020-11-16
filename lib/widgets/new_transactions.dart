@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:intl/intl.dart';
 
 class NewTransactions extends StatefulWidget {
@@ -59,24 +60,34 @@ class _NewTransactionsState extends State<NewTransactions> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.vertical(
               top: Radius.circular(20),
+              bottom: Radius.circular(20),
             )),
             margin: EdgeInsets.only(
               top: 5,
               left: 5,
               right: 5,
+              bottom: 5,
             ),
             child: Container(
               padding: EdgeInsets.only(
-                  top: 10,
-                  left: 10,
-                  bottom: mediaQuery.viewInsets.bottom + 0,
-                  right: 10),
+                top: 10,
+                left: 10,
+                bottom: mediaQuery.viewInsets.bottom + 10,
+                right: 10,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
                   TextField(
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
                     decoration: InputDecoration(
                       labelText: 'Title',
+                      labelStyle: TextStyle(
+                        color: Colors.black54,
+                      ),
+                      floatingLabelBehavior: FloatingLabelBehavior.auto,
                     ),
                     // onChanged: (value) {
                     //   titleInput = value;
@@ -84,8 +95,19 @@ class _NewTransactionsState extends State<NewTransactions> {
                     controller: _titleController,
                   ),
                   TextField(
+                    cursorColor: Colors.black,
+                    enableSuggestions: true,
+
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
                     decoration: InputDecoration(
+                      
                       labelText: 'Amount',
+                      labelStyle: TextStyle(
+                        color: Colors.black54,
+                      ),
+                      floatingLabelBehavior: FloatingLabelBehavior.auto,
                     ),
                     // onChanged: (value) {
                     //   amountInput = value;
@@ -104,7 +126,7 @@ class _NewTransactionsState extends State<NewTransactions> {
                               : 'Picked Date: ${DateFormat('dd/MM/yyyy').format(_selectedDate)}'),
                         ),
                         FlatButton(
-                          textColor: theme.primaryColor,
+                          textColor: theme.buttonColor,
                           child: Text(
                             'Choose Date',
                             style: TextStyle(
@@ -117,7 +139,8 @@ class _NewTransactionsState extends State<NewTransactions> {
                           child: Text('Add Transaction'),
                           onPressed: _addNew,
                           textColor: theme.textTheme.button.color,
-                          color: theme.primaryColor,
+                         
+                         
                         )
                       ],
                     ),

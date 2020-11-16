@@ -5,7 +5,7 @@ Widget wrapWithBanner(Widget child) {
     child: child,
     location: BannerLocation.topStart,
     message: 'LuCiFeR',
-    color: Colors.grey.withOpacity(0.6),
+    color: Colors.amber.withOpacity(0.6),
     textStyle: TextStyle(
       fontWeight: FontWeight.bold,
       fontSize: 12.0,
