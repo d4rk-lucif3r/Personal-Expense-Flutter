@@ -4,7 +4,7 @@ class ChartBar extends StatelessWidget {
   final String label;
   final double spendingAmount;
   final double spendingPctTotal;
-  ChartBar({
+  const ChartBar({
     @required this.label,
     @required this.spendingAmount,
     @required this.spendingPctTotal,
@@ -29,7 +29,7 @@ class ChartBar extends StatelessWidget {
               child: Stack(children: <Widget>[
                 Container(
                     decoration: BoxDecoration(
-                  border: Border.all(
+                  border:  Border.all(
                     color: Colors.grey,
                     width: 1.0,
                   ),
