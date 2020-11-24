@@ -9,7 +9,6 @@ import './widgets/transactionList.dart';
 import './models/transcation.dart';
 import './widgets/chart.dart';
 import './widgets/banner.dart';
-import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 
 void main() {
   // WidgetsFlutterBinding.ensureInitialized();
@@ -27,14 +26,20 @@ class HomePage extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Personal Expense',
       theme: ThemeData(
-          buttonTheme: ButtonThemeData(
-            buttonColor: Colors.amber,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-            highlightColor: Colors.amberAccent,
-            disabledColor: Colors.amber[100]
+          snackBarTheme: SnackBarThemeData(
+            elevation: 20,
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           ),
+          buttonTheme: ButtonThemeData(
+              buttonColor: Colors.amber,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              highlightColor: Colors.amberAccent,
+              disabledColor: Colors.amber[100]),
           textSelectionTheme: TextSelectionThemeData(
               cursorColor: Colors.black,
               selectionColor: Colors.black,
@@ -105,20 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final titleController = TextEditingController();
   bool boolChart = false;
   final amountController = TextEditingController();
-  final List<Transaction> _userTransactions = [
-    // Transaction(
-    //   id: 't1',
-    //   title: 'New Shoes',
-    //   amount: 69.9,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: 't2',
-    //   title: 'New Dress',
-    //   amount: 60.9,
-    //   date: DateTime.now(),
-    // ),
-  ];
+  final List<Transaction> _userTransactions = [];
   List<Transaction> get _recentTransaction {
     return _userTransactions.where((tx) {
       return tx.date.isAfter(DateTime.now().subtract(
@@ -149,114 +141,114 @@ class _MyHomePageState extends State<MyHomePage> {
     showCupertinoModalPopup(
         context: ctx,
         barrierDismissible: true,
-        // isScrollControlled: true,
-        // shape: RoundedRectangleBorder(
-        //     borderRadius: BorderRadius.vertical(
-        //   top: Radius.circular(20),
-        // )),
-
         builder: (_) {
           return NewTransactions(_addNewTransaction);
         });
   }
 
+  Widget _buildCupertinoNavigationbar(bool isLandscape, ThemeData theme) {
+    return CupertinoNavigationBar(
+      middle: const Text('Personal Expense'),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          if (isLandscape)
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+              Text(
+                'Show Chart',
+                style: theme.textTheme.headline5,
+              ),
+              Switch.adaptive(
+                value: boolChart,
+                onChanged: (val) {
+                  setState(() {
+                    boolChart = val;
+                  });
+                },
+              ),
+            ]),
+          GestureDetector(
+            child: Icon(CupertinoIcons.add),
+            onTap: () => _startAddNewTransaction(context),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAppBarContent(bool isLandscape) {
+    return AppBar(
+      title: const Text('Personal Expense'),
+      actions: <Widget>[
+        if (isLandscape)
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+            Text(
+              'Show Chart',
+              // style: theme.textTheme.headline5,
+            ),
+            Switch.adaptive(
+              value: boolChart,
+              onChanged: (val) {
+                setState(() {
+                  boolChart = val;
+                });
+              },
+            ),
+          ]),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    FlutterStatusbarcolor.setStatusBarColor(Colors.red.withOpacity(0));
-    //FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
     final mediaQuery = MediaQuery.of(context);
     final theme = Theme.of(context);
     final isLandscape = mediaQuery.orientation == Orientation.landscape;
     final PreferredSizeWidget appBar = Platform.isIOS
-        ? CupertinoNavigationBar(
-            middle: Text('Personal Expense'),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                if (isLandscape)
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          'Show Chart',
-                          style: theme.textTheme.headline5,
-                        ),
-                        Switch.adaptive(
-                          value: boolChart,
-                          onChanged: (val) {
-                            setState(() {
-                              boolChart = val;
-                            });
-                          },
-                        ),
-                      ]),
-                GestureDetector(
-                  child: Icon(CupertinoIcons.add),
-                  onTap: () => _startAddNewTransaction(context),
-                ),
-              ],
-            ),
-          )
-        : AppBar(
-            title: Text('Personal Expense'),
-            actions: <Widget>[
-              if (isLandscape)
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        'Show Chart',
-                        style: theme.textTheme.headline5,
-                      ),
-                      Switch.adaptive(
-                        value: boolChart,
-                        onChanged: (val) {
-                          setState(() {
-                            boolChart = val;
-                          });
-                        },
-                      ),
-                    ]),
-            ],
-          );
+        ? _buildCupertinoNavigationbar(isLandscape, theme)
+        : _buildAppBarContent(isLandscape);
     final txList = Container(
+      height: (mediaQuery.size.height -
+              appBar.preferredSize.height -
+              mediaQuery.padding.top) *
+          .7,
+      child: TransactionList(_userTransactions, _deleteTransaction),
+    );
+
+    final chartPortrait = Container(
+        height: (mediaQuery.size.height -
+                appBar.preferredSize.height -
+                mediaQuery.padding.top) *
+            .3,
+        child: Chart(
+          _recentTransaction,
+        ));
+
+    final switchChart = Container(
         height: (mediaQuery.size.height -
                 appBar.preferredSize.height -
                 mediaQuery.padding.top) *
             .7,
-        child: TransactionList(_userTransactions, _deleteTransaction));
+        child: Chart(
+          _recentTransaction,
+        ));
+
+    final switchTransactionList = Container(
+      height: (mediaQuery.size.height -
+          appBar.preferredSize.height -
+          mediaQuery.padding.top),
+      child: TransactionList(_userTransactions, _deleteTransaction),
+    );
+
     final pageBody = SafeArea(
         child: SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          if (!isLandscape)
-            Container(
-                height: (mediaQuery.size.height -
-                        appBar.preferredSize.height -
-                        mediaQuery.padding.top) *
-                    .3,
-                child: Chart(
-                  _recentTransaction,
-                )),
+          if (!isLandscape) chartPortrait,
           if (!isLandscape) txList,
-          if (isLandscape)
-            boolChart
-                ? Container(
-                    height: (mediaQuery.size.height -
-                            appBar.preferredSize.height -
-                            mediaQuery.padding.top) *
-                        .7,
-                    child: Chart(
-                      _recentTransaction,
-                    ))
-                : Container(
-                    height: (mediaQuery.size.height -
-                        appBar.preferredSize.height -
-                        mediaQuery.padding.top),
-                    child:
-                        TransactionList(_userTransactions, _deleteTransaction)),
+          if (isLandscape) boolChart ? switchChart : switchTransactionList,
         ],
       ),
     ));
@@ -268,7 +260,7 @@ class _MyHomePageState extends State<MyHomePage> {
               navigationBar: appBar,
             )
           : Scaffold(
-              backgroundColor: theme.backgroundColor,
+              backgroundColor: theme.backgroundColor, 
               appBar: appBar,
               body: pageBody,
               floatingActionButtonLocation:
