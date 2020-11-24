@@ -11,11 +11,6 @@ import './widgets/chart.dart';
 import './widgets/banner.dart';
 
 void main() {
-  // WidgetsFlutterBinding.ensureInitialized();
-  // SystemChrome.setPreferredOrientations([
-  //   DeviceOrientation.portraitDown,
-  //   DeviceOrientation.portraitUp,
-  // ]);
   runApp(HomePage());
 }
 
