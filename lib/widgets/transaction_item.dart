@@ -51,7 +51,7 @@ class TransactionItems extends StatelessWidget {
                 label: const Text('Delete'),
                 onPressed: () {
                   deleteTx(userTransaction.id);
-                  Scaffold.of(context).showSnackBar(SnackBar(
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: const Text("Deleting"),
                     duration: Duration(milliseconds: 600),
                   ));
@@ -62,7 +62,7 @@ class TransactionItems extends StatelessWidget {
                 color: Colors.amber,
                 onPressed: () {
                   deleteTx(userTransaction.id);
-                  Scaffold.of(context).showSnackBar(SnackBar(
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: const Text("Deleting"),
                     duration: Duration(milliseconds: 600),
                   ));
