@@ -4,16 +4,41 @@ import 'package:intl/intl.dart';
 
 class NewTransactions extends StatefulWidget {
   final Function addTx;
-  NewTransactions(this.addTx);
+  NewTransactions(this.addTx) {
+    print("Newtransaction Widget Constructor");
+  }
 
   @override
-  _NewTransactionsState createState() => _NewTransactionsState();
+  _NewTransactionsState createState() {
+    print("Newtransaction Widget createState");
+    return _NewTransactionsState();
+  }
 }
 
 class _NewTransactionsState extends State<NewTransactions> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
   DateTime _selectedDate;
+  _NewTransactionsState() {
+    print("Newtransaction State Constructor");
+  }
+  @override
+  void initState() {
+    super.initState();
+    print("Newtransaction Widget initState");
+    
+  }
+  @override
+  void didUpdateWidget(covariant NewTransactions oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    print("Newtransaction Widget didUpdateState");
+  }
+  @override
+  void dispose() {
+    super.dispose();
+    print("Newtransaction Widget disposeState");
+  }
+  
   void _addNew() {
     if (_amountController.text.isEmpty) {
       return;
@@ -102,7 +127,6 @@ class _NewTransactionsState extends State<NewTransactions> {
                       color: Colors.white,
                     ),
                     decoration: InputDecoration(
-                      
                       labelText: 'Amount',
                       labelStyle: TextStyle(
                         color: Colors.black54,
@@ -138,9 +162,7 @@ class _NewTransactionsState extends State<NewTransactions> {
                         RaisedButton(
                           child: Text('Add Transaction'),
                           onPressed: _addNew,
-                          textColor: theme.textTheme.button.color,
-                         
-                         
+                          textColor: theme.textTheme.button.color,                
                         )
                       ],
                     ),
