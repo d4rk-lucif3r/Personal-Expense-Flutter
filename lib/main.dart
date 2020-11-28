@@ -101,11 +101,31 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   final titleController = TextEditingController();
   bool boolChart = false;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print("New state is $state");
+    super.didChangeAppLifecycleState(state);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
   final amountController = TextEditingController();
   final List<Transaction> _userTransactions = [];
+
   List<Transaction> get _recentTransaction {
     return _userTransactions.where((tx) {
       return tx.date.isAfter(DateTime.now().subtract(
@@ -255,7 +275,7 @@ class _MyHomePageState extends State<MyHomePage> {
               navigationBar: appBar,
             )
           : Scaffold(
-              backgroundColor: theme.backgroundColor, 
+              backgroundColor: theme.backgroundColor,
               appBar: appBar,
               body: pageBody,
               floatingActionButtonLocation:
