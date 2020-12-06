@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/transcation.dart';
 import '../widgets/transaction_item.dart';
+
 class TransactionList extends StatelessWidget {
   final List<Transaction> _userTransactions;
   final Function _deleteTx;
@@ -17,11 +18,11 @@ class TransactionList extends StatelessWidget {
                 'No Transaction Added yet!',
                 style: theme.textTheme.headline6,
               ),
-             const SizedBox(
+              const SizedBox(
                 height: 15,
               ),
               Container(
-                  alignment:  Alignment.topCenter,
+                  alignment: Alignment.topCenter,
                   height: constraints.maxHeight * .6,
                   child: Image.asset(
                     'assets/images/waiting.png',
@@ -29,16 +30,13 @@ class TransactionList extends StatelessWidget {
                   ))
             ]);
           })
-        : ListView.builder(
-            itemBuilder: (ctx, index) {
-              return TransactionItems(
-                userTransaction: _userTransactions[index], 
-                theme: theme, deleteTx: _deleteTx);
-            },
-            itemCount: _userTransactions.length,
-          );
+        : ListView(
+            children: _userTransactions
+                .map((tx) => TransactionItems(
+                    key: ValueKey(tx.id),
+                    userTransaction: tx,
+                    theme: theme,
+                    deleteTx: _deleteTx))
+                .toList());
   }
 }
-
-
-
