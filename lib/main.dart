@@ -153,8 +153,27 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   }
 
   void _addNewTransaction(String txTitle, double amount, DateTime chosenDate) {
-    Provider.of<TransactionProvider>(context, listen: false)
-        .addTransactions(txTitle, amount, chosenDate);
+    try {
+      Provider.of<TransactionProvider>(context, listen: false)
+          .addTransactions(txTitle, amount, chosenDate);
+    } catch (e) {
+       showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          backgroundColor: Colors.white,
+          title: Text('An error Occured'),
+          content: Text('Something Went Wrong While Editing'),
+          actions: [
+            FlatButton(
+              child: Text('Okay'),
+              onPressed: () {
+                Navigator.of(ctx).pop();
+              },
+            )
+          ],
+        ),
+      );
+    }
     final newTx = Transaction(
       id: DateTime.now().toString(),
       title: txTitle,
