@@ -1,4 +1,5 @@
-import 'package:flutter/foundation.dart';
+
+import 'package:flutter/material.dart';
 
 class Transaction {
   final String id;
@@ -12,3 +13,5 @@ class Transaction {
     @required this.date,
   });
 }
+
+

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import './chart_bar.dart';
-import '../models/transcation.dart';
+import '../providers/transcation.dart';
 import 'package:intl/intl.dart';
 
 class Chart extends StatelessWidget {

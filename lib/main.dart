@@ -1,12 +1,15 @@
 import 'dart:io';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+import './providers/transactionProvider.dart';
+import 'package:provider/provider.dart';
 import './widgets/new_transactions.dart';
 import './widgets/transactionList.dart';
 
-import './models/transcation.dart';
+import 'providers/transcation.dart';
 import './widgets/chart.dart';
 import './widgets/banner.dart';
 
@@ -17,80 +20,82 @@ void main() {
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Personal Expense',
-      theme: ThemeData(
-          snackBarTheme: SnackBarThemeData(
-            elevation: 20,
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          ),
-          buttonTheme: ButtonThemeData(
-              buttonColor: Colors.amber,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0),
+    return ChangeNotifierProvider(
+        create: (ctx) => TransactionProvider(),
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Personal Expense',
+          theme: ThemeData(
+              snackBarTheme: SnackBarThemeData(
+                elevation: 20,
+                backgroundColor: Colors.red,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
               ),
-              highlightColor: Colors.amberAccent,
-              disabledColor: Colors.amber[100]),
-          textSelectionTheme: TextSelectionThemeData(
-              cursorColor: Colors.black,
-              selectionColor: Colors.black,
-              selectionHandleColor: Colors.black),
-          //dialogBackgroundColor: Colors.black,
-          dialogTheme: DialogTheme(
-              //backgroundColor: Colors.black,
-              contentTextStyle: TextStyle(
-                backgroundColor: Colors.white,
-                color: Colors.amber,
-                decorationColor: Colors.red,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              )),
-          primarySwatch: Colors.red,
-          accentColor: Colors.orange,
-          cardTheme: CardTheme(
-              elevation: 10,
-              color: Colors.red,
-              shadowColor: Colors.deepOrange,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              )),
-          fontFamily: 'OpenSans',
-          textTheme: ThemeData.light().textTheme.copyWith(
-                headline6: TextStyle(
-                    fontFamily: 'OpenSans',
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-                button: TextStyle(
-                  color: Colors.white,
-                ),
-                headline5: TextStyle(
-                    fontFamily: 'OpenSans',
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              ),
-          errorColor: Colors.red,
-          backgroundColor: Colors.black,
-          appBarTheme: AppBarTheme(
-            brightness: Brightness.light,
-            textTheme: ThemeData.dark().textTheme.copyWith(
+              buttonTheme: ButtonThemeData(
+                  buttonColor: Colors.amber,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  highlightColor: Colors.amberAccent,
+                  disabledColor: Colors.amber[100]),
+              textSelectionTheme: TextSelectionThemeData(
+                  cursorColor: Colors.black,
+                  selectionColor: Colors.black,
+                  selectionHandleColor: Colors.black),
+              //dialogBackgroundColor: Colors.black,
+              dialogTheme: DialogTheme(
+                  //backgroundColor: Colors.black,
+                  contentTextStyle: TextStyle(
+                    backgroundColor: Colors.white,
+                    color: Colors.amber,
+                    decorationColor: Colors.red,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  )),
+              primarySwatch: Colors.red,
+              accentColor: Colors.orange,
+              cardTheme: CardTheme(
+                  elevation: 10,
+                  color: Colors.red,
+                  shadowColor: Colors.deepOrange,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  )),
+              fontFamily: 'OpenSans',
+              textTheme: ThemeData.light().textTheme.copyWith(
                     headline6: TextStyle(
-                  fontFamily: 'OpenSans',
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                )),
-            centerTitle: true,
-            elevation: 10,
-            shadowColor: Colors.blueGrey,
-          )),
-      home: MyHomePage(),
-    );
+                        fontFamily: 'OpenSans',
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                    button: TextStyle(
+                      color: Colors.white,
+                    ),
+                    headline5: TextStyle(
+                        fontFamily: 'OpenSans',
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ),
+              errorColor: Colors.red,
+              backgroundColor: Colors.black,
+              appBarTheme: AppBarTheme(
+                brightness: Brightness.light,
+                textTheme: ThemeData.dark().textTheme.copyWith(
+                        headline6: TextStyle(
+                      fontFamily: 'OpenSans',
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    )),
+                centerTitle: true,
+                elevation: 10,
+                shadowColor: Colors.blueGrey,
+              )),
+          home: MyHomePage(),
+        ));
   }
 }
 
@@ -102,27 +107,10 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   final titleController = TextEditingController();
   bool boolChart = false;
-
-  @override
-  void initState() {
-    WidgetsBinding.instance.addObserver(this);
-    super.initState();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    print("New state is $state");
-    super.didChangeAppLifecycleState(state);
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
+  var _isInit = true;
+  var _isLoading = true;
   final amountController = TextEditingController();
-  final List<Transaction> _userTransactions = [];
+  List<Transaction> _userTransactions = [];
 
   List<Transaction> get _recentTransaction {
     return _userTransactions.where((tx) {
@@ -132,7 +120,41 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     }).toList();
   }
 
+  Future<void> fetchAndSetData() async {
+    final url =
+        'https://personal-expense-a299e-default-rtdb.firebaseio.com/transactions.json';
+
+    final response = await http.get(url);
+    final extractedData = json.decode(response.body) as Map<String, dynamic>;
+    final List<Transaction> loadedTransactions = [];
+    if (extractedData == null) {
+      return;
+    }
+    extractedData.forEach((transactionID, transactionData) {
+      loadedTransactions.add(Transaction(
+          id: transactionID,
+          title: transactionData['title'],
+          amount: double.parse(transactionData['amount']),
+          date: DateTime.parse(transactionData['date'])));
+    });
+    setState(() {
+      _isLoading = false;
+      _userTransactions = loadedTransactions;
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      fetchAndSetData();
+    }
+    _isInit = false;
+    super.didChangeDependencies();
+  }
+
   void _addNewTransaction(String txTitle, double amount, DateTime chosenDate) {
+    Provider.of<TransactionProvider>(context, listen: false)
+        .addTransactions(txTitle, amount, chosenDate);
     final newTx = Transaction(
       id: DateTime.now().toString(),
       title: txTitle,
@@ -145,6 +167,10 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   }
 
   void _deleteTransaction(String id) {
+    final url =
+        'https://personal-expense-a299e-default-rtdb.firebaseio.com/transactions/$id.json';
+    http.delete(url);
+
     setState(() {
       _userTransactions.removeWhere((tx) => tx.id == id);
     });
@@ -208,6 +234,10 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
               },
             ),
           ]),
+        IconButton(
+          icon: Icon(Icons.sync),
+          onPressed: fetchAndSetData,
+        ),
       ],
     );
   }
@@ -275,7 +305,14 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
           : Scaffold(
               backgroundColor: theme.backgroundColor,
               appBar: appBar,
-              body: pageBody,
+              body: _isLoading
+                  ? Stack(
+                      children: [
+                        pageBody,
+                        Center(child: CircularProgressIndicator()),
+                      ],
+                    )
+                  : pageBody,
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.centerFloat,
               floatingActionButton: Platform.isIOS

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import '../providers/transactionProvider.dart';
 
 class NewTransactions extends StatefulWidget {
   final Function addTx;
@@ -26,19 +27,20 @@ class _NewTransactionsState extends State<NewTransactions> {
   void initState() {
     super.initState();
     print("Newtransaction Widget initState");
-    
   }
+
   @override
   void didUpdateWidget(covariant NewTransactions oldWidget) {
     super.didUpdateWidget(oldWidget);
     print("Newtransaction Widget didUpdateState");
   }
+
   @override
   void dispose() {
     super.dispose();
     print("Newtransaction Widget disposeState");
   }
-  
+
   void _addNew() {
     if (_amountController.text.isEmpty) {
       return;
@@ -53,6 +55,7 @@ class _NewTransactionsState extends State<NewTransactions> {
       enteredAmount,
       _selectedDate,
     );
+
 
     Navigator.of(context).pop();
   }
@@ -162,7 +165,7 @@ class _NewTransactionsState extends State<NewTransactions> {
                         RaisedButton(
                           child: Text('Add Transaction'),
                           onPressed: _addNew,
-                          textColor: theme.textTheme.button.color,                
+                          textColor: theme.textTheme.button.color,
                         )
                       ],
                     ),
